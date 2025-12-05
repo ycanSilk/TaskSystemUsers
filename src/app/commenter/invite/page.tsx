@@ -133,10 +133,10 @@ const InvitePage = () => {
           return;
         }
       }
-      console.log('要传递给/api/public/inviteagent/myinvitationcode后端的user ID:', userId);
+      console.log('要传递给/api/inviteagent/myinvitationcode后端的user ID:', userId);
 
       // 调用生成邀请码的API
-      const response = await fetch('/api/public/inviteagent/myinvitationcode', {
+      const response = await fetch('/api/inviteagent/myinvitationcode', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ const InvitePage = () => {
       console.log('请求成功');
       console.log('生成邀请码API响应状态:', response.status);
       const data: ApiResponse<InvitationCodeData> = await response.json();
-      console.log('请求url:', '/api/public/inviteagent/myinvitationcode');
+      console.log('请求url:', '/api/inviteagent/myinvitationcode');
       console.log('从生成邀请码API获取到的邀请码数据:', data);
       
       // 同时检查HTTP状态和响应数据中的success字段
@@ -196,7 +196,7 @@ const InvitePage = () => {
           }
         }
         
-        const agentStatsResponse = await fetch('/api/public/inviteagent/agentstats', {
+        const agentStatsResponse = await fetch('/api/inviteagent/agentstats', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -214,12 +214,12 @@ const InvitePage = () => {
           console.log('代理人统计API响应状态:', agentStatsResponse.status);
         }
         const agentStatsResponseData: ApiResponse<AgentStatsData> = await agentStatsResponse.json();
-        console.log('请求url:', '/api/public/inviteagent/agentstats');
+        console.log('请求url:', '/api/inviteagent/agentstats');
         console.log('从代理人统计API获取到的统计数据:', agentStatsResponseData.data);
         setAgentStatsData(agentStatsResponseData.data);
 
         // 初始加载时获取邀请码
-        const generateInviteCodeResponse = await fetch('/api/public/inviteagent/myinvitationcode', {
+        const generateInviteCodeResponse = await fetch('/api/inviteagent/myinvitationcode', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -238,7 +238,7 @@ const InvitePage = () => {
         }
         
         const generateInviteCodeResponseData: ApiResponse<InvitationCodeData> = await generateInviteCodeResponse.json();
-        console.log('请求url:', '/api/public/inviteagent/myinvitationcode');
+        console.log('请求url:', '/api/inviteagent/myinvitationcode');
         console.log('从生成邀请码API获取到的邀请码数据:', generateInviteCodeResponseData.data);
         
         if (generateInviteCodeResponseData.success === true && generateInviteCodeResponseData.data) {
@@ -246,7 +246,7 @@ const InvitePage = () => {
         }
 
         // 获取团队成员数据
-        const agentteamResponse = await fetch('/api/public/inviteagent/myagentteam', {
+        const agentteamResponse = await fetch('/api/inviteagent/myagentteam', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -265,7 +265,7 @@ const InvitePage = () => {
         }
         
         const agentteamResponseData: any = await agentteamResponse.json();
-        console.log('请求url:', '/api/public/inviteagent/myagentteam');
+        console.log('请求url:', '/api/inviteagent/myagentteam');
         console.log('从代理人团队统计API获取到的统计数据:', agentteamResponseData.data);
         
         // 处理团队成员列表数据

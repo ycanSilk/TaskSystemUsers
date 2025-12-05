@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     
     // 从Cookie中获取token作为备选
     const cookieStore = await cookies();
-    const tokenKeys = ['commenter_token', 'publisher_token', 'admin_token', 'user_token', 'auth_token', 'token'];
+    const tokenKeys = ['AcceptTask_token'];
     let token: string | undefined;
     
     // 优先从Authorization头获取token

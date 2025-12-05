@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   // 从Cookie获取token
   const cookieStore = await cookies();
-  const tokenKeys = ['commenter_token', 'publisher_token', 'admin_token', 'user_token', 'auth_token', 'token'];
+  const tokenKeys = ['AcceptTask_token'];
   let token: string | undefined;
   
   for (const key of tokenKeys) {

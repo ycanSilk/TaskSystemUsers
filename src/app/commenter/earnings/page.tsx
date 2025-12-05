@@ -231,7 +231,7 @@ export default function CommenterEarningsPage() {
         setError(null);
 
         // 调用后端API获取交易记录
-        const response = await fetch('/api/public/walletmanagement/transactionrecord', {
+        const response = await fetch('/api/walletmanagement/transactionrecord', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

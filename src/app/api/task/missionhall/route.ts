@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 const config = require('../../apiconfig/config.json');
-import { getAllModuleTokens, isValidToken } from '../../token/tokenManager';
 export const dynamic = 'force-dynamic';
+
+// 简单的token验证函数
+function isValidToken(token: string): boolean {
+  return !!token && token.trim() !== '';
+}
 
 // 创建标准化响应的辅助函数
 function createStandardResponse(
@@ -57,17 +61,14 @@ export async function POST(request: Request) {
         ? requestData.Authorization.substring(7) 
         : requestData.Authorization;
     }
-    // 从tokenUtils获取
+    // 从cookies获取
     if (!token) {
-      const allTokens = await getAllModuleTokens('GET_MISSION_HALL_TASKS');
-      // 确保allTokens是对象类型
-      if (typeof allTokens === 'object' && allTokens !== null) {
-        // 使用Object.entries保持类型安全
-        for (const [moduleType, tokenInfo] of Object.entries(allTokens)) {
-          if (tokenInfo?.token && isValidToken(tokenInfo.token)) {
-            token = tokenInfo.token;
-            break;
-          }
+      const tokenKeys = ['AcceptTask_token'];
+      for (const key of tokenKeys) {
+        const cookieToken = cookies().get(key)?.value;
+        if (cookieToken) {
+          token = cookieToken;
+          break;
         }
       }
     }
@@ -81,7 +82,7 @@ export async function POST(request: Request) {
     // 从Cookie获取
     if (!token) {
       const cookieStore = await cookies();
-      const tokenKeys = ['commenter_token', 'publisher_token', 'admin_token', 'user_token', 'auth_token', 'token'];
+      const tokenKeys = ['AcceptTask_token'];
       if (cookieStore && typeof cookieStore.get === 'function') {
         for (const key of tokenKeys) {
           const cookieToken = cookieStore.get(key)?.value;

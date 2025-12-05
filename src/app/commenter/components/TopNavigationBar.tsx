@@ -153,7 +153,7 @@ export default function TopNavigationBar({ user }: TopNavigationBarProps) {
   const handleLogout = async () => {
     try {
       // 调用退出登录API
-      const response = await fetch('/api/commenter/auth/logout', {
+      const response = await fetch('/api/auth/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

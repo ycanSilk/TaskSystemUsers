@@ -85,7 +85,7 @@ const BalancePage = () => {
         setLoading(true);
         setError(null);
         // 首先调用获取钱包信息API
-        const walletResponse = await fetch('/api/public/walletmanagement/getwalletinfo', {
+        const walletResponse = await fetch('/api/walletmanagement/getwalletinfo', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ const BalancePage = () => {
         }
         
         // 然后调用获取交易记录API
-        const transactionResponse = await fetch('/api/public/walletmanagement/transactionrecord', {
+        const transactionResponse = await fetch('/api/walletmanagement/transactionrecord', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

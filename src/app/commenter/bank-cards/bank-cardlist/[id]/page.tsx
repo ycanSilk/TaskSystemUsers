@@ -64,7 +64,7 @@ export default function BankCardDetail() {
         
         // 调用后端API获取银行卡详情
         // 使用正确的API路径 - 注意这里的路径需要根据实际后端实现进行调整
-        const response = await fetch(`/api/commenter/bank/bankcardslist/${params.id}`, {
+        const response = await fetch(`/apibank/bankcardslist/${params.id}`, {
           method: 'GET',
           headers: {
             'accept': 'application/json',
@@ -151,7 +151,7 @@ export default function BankCardDetail() {
         }
         
         // 调用后端API解除绑定
-        const response = await fetch(`/api/commenter/bank/bankcardslist/${bankCard.id}`, {
+        const response = await fetch(`/apibank/bankcardslist/${bankCard.id}`, {
           method: 'DELETE',
           headers: {
             'accept': '*/*',
@@ -208,7 +208,7 @@ export default function BankCardDetail() {
         }
         
         // 调用后端API设置默认银行卡
-        const response = await fetch(`/api/commenter/bank/bankcardslist/setdefault/${bankCard.id}`, {
+        const response = await fetch(`/apibank/bankcardslist/setdefault/${bankCard.id}`, {
           method: 'POST',
           headers: {
             'accept': '*/*',

@@ -92,7 +92,7 @@ const OrderDetailPage = () => {
     const fetchOrderDetails = async () => {
       try {
         // Call the API
-        const response = await fetch('/api/commenter/task/myacceptedtaskslist', {
+        const response = await fetch('/api/task/myacceptedtaskslist', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

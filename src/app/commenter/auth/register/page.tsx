@@ -160,7 +160,7 @@ export default function CommenterRegisterPage() {
     
     try {
       // 调用注册API
-      const response = await fetch('/api/commenter/auth/register', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

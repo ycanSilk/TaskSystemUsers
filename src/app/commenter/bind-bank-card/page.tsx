@@ -240,7 +240,7 @@ export default function BindBankCardPage() {
       console.log('提交的银行卡信息:', formData);
       
       // 调用指定的后端API文件
-      const response = await fetch('/api/public/bank/addbankcard', {
+      const response = await fetch('/api/bank/addbankcard', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

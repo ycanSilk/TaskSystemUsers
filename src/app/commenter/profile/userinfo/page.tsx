@@ -39,7 +39,7 @@ export default function PersonalInfoPage() {
       setError(null);
       
       // 执行API请求，使用credentials: 'include'自动携带HttpOnly Cookie
-      const apiUrl = '/api/commenter/user/getloginuserinfo';
+      const apiUrl = '/apiuser/getloginuserinfo';
       const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {

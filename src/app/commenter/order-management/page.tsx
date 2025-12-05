@@ -309,7 +309,7 @@ const OrderManagementPage = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch('/api/commenter/task/myacceptedtaskslist', {
+        const response = await fetch('/api/task/myacceptedtaskslist', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -240,7 +240,7 @@ export default function CommenterLoginPage() {
     setIsLoading(true);
     const startTime = Date.now();
     try {
-      const response = await fetch('/api/commenter/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -262,8 +262,7 @@ export default function CommenterLoginPage() {
       // 登录成功
       clearAllAuth();
       
-      // 使用简化的tokenManager处理登录响应
-      // 注意：不再保存token，只保存用户信息和认证状态
+    
       const tokenResult = handleLoginResponse(data);
       if (!tokenResult) {
         throw new Error('处理登录响应失败');

@@ -15,10 +15,8 @@ async function handleTasksListRequest(request: NextRequest) {
       try {
         const cookieStore = await cookies();
         // 尝试从新的cookie名称获取
-        const newCookieToken = cookieStore.get('AcceptTask_token');
-        // 如果没有新的cookie，尝试从旧的cookie名称获取
-        const oldCookieToken = cookieStore.get('commenter_token');
-        token = newCookieToken?.value || oldCookieToken?.value || '';
+        const CookieToken = cookieStore.get('AcceptTask_token');
+        token = CookieToken?.value || '';
       } catch (cookieError) {
         console.error('无法从Cookie获取token:', cookieError);
       }

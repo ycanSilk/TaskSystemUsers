@@ -81,7 +81,7 @@ const WithdrawalPage = () => {
       try {
         setLoading(true);
 
-        const responseBalance = await fetch('/api/public/walletmanagement/getwalletinfo', {
+        const responseBalance = await fetch('/api/walletmanagement/getwalletinfo', {
           method: 'GET',
           headers: {
             'accept': 'application/json',
@@ -99,7 +99,7 @@ const WithdrawalPage = () => {
         }
         
         // 调用后端API获取银行卡列表
-        const response = await fetch('/api/public/bank/getbankcardslist', {
+        const response = await fetch('/api/bank/getbankcardslist', {
           method: 'GET',
           headers: {
             'accept': 'application/json',
@@ -306,7 +306,7 @@ const WithdrawalPage = () => {
 
       // 调用后端API提交提现申请，处理两种提现方式
       console.log('Calling withdrawal API...');
-      const response = await fetch('/api/public/walletmanagement/balancewithdrawal', {
+      const response = await fetch('/api/walletmanagement/balancewithdrawal', {
         method: 'POST',
         headers: {
           'accept': 'application/json',

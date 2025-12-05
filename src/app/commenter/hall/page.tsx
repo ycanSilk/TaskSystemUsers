@@ -37,7 +37,7 @@ export default function CommenterHallPage() {
             };
           };
           message?: string;
-        }>('/api/commenter/user/getloginuserinfo', { withCredentials: true });
+        }>('/apiuser/getloginuserinfo', { withCredentials: true });
         const data = response.data;
 
         if (data.success && data.data?.userInfo) {

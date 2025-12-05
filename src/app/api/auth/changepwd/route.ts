@@ -8,9 +8,7 @@ const getTokenFromCookie = async (): Promise<string | null> => {
     const cookieStore = await cookies();
     // 尝试从新的cookie名称获取
     const newToken = cookieStore.get('AcceptTask_token')?.value;
-    // 如果没有新的cookie，尝试从旧的cookie名称获取
-    const oldToken = cookieStore.get('commenter_token')?.value;
-    return newToken || oldToken || null;
+    return newToken || null;
   } catch (error) {
     console.error('无法从Cookie获取token:', error);
     return null;

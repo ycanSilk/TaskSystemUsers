@@ -43,7 +43,7 @@ function validateLoginData(data: LoginRequest): { isValid: boolean; error?: stri
 
 /**
  * 配置并设置安全的HttpOnly Cookie
- * 根据请求协议自动决定是否使用secure属性
+ * 优化：只使用统一的token名称
  */
 function setSecureHttpOnlyCookie(
   req: NextRequest,
@@ -54,14 +54,16 @@ function setSecureHttpOnlyCookie(
 ): void {
   const expiryDate = new Date(Date.now() + maxAge * 1000);
   
-  // 根据请求协议自动决定secure属性
-  // 如果是HTTPS请求，则设置secure为true；否则为false
-  const isHttps = req.headers.get('x-forwarded-proto') === 'https' || req.url.startsWith('https://');
+  // 判断是否为HTTPS请求
+  const isHttps = req.headers.get('x-forwarded-proto') === 'https' || 
+                 req.url.startsWith('https://') ||
+                 // 允许在开发环境下使用HTTP（根据环境变量判断）
+                 process.env.NODE_ENV === 'development';
   
-  // 设置安全Cookie
+  // 设置安全Cookie，只使用统一的token名称
   response.cookies.set(name, value, {
     httpOnly: true,
-    secure: isHttps, // 根据请求协议自动设置secure属性
+    secure: isHttps, // 在HTTPS和开发环境下都启用secure
     sameSite: 'lax',
     path: '/',
     expires: expiryDate,
@@ -164,6 +166,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     
     // 关键日志
     console.log(`用户 ${requestData.username} 登录成功`);
+    console.log(`设置token信息: ${token}`);
     console.log(result);
     
     return successResponse;

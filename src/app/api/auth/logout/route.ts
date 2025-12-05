@@ -81,10 +81,10 @@ const getToken = async (request: Request): Promise<{ token: string; source: stri
     try {
       const cookieStore = await cookies();
       // 尝试从新的cookie名称获取
-      const newCookieToken = cookieStore.get('AcceptTask_token');
+      const CookieToken = cookieStore.get('AcceptTask_token');
       // 如果没有新的cookie，尝试从旧的cookie名称获取
-      const oldCookieToken = cookieStore.get('commenter_token');
-      token = newCookieToken?.value || oldCookieToken?.value || '';
+      
+      token = CookieToken?.value || '';
       source = 'cookie';
       logger.debug('从Cookie获取token', { hasToken: !!token });
     } catch (cookieError) {
@@ -293,7 +293,7 @@ export async function POST(request: Request) {
 // 清除认证相关的Cookie的工具函数
 async function clearAuthCookies(): Promise<void> {
   const cookieStore = await cookies();
-  const authCookies = ['AcceptTask_token', 'commenter_token', 'commenter_auth_data', 'commenter_user_info'];
+  const authCookies = ['AcceptTask_token'];
   
   for (const cookieName of authCookies) {
     try {

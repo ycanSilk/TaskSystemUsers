@@ -92,7 +92,7 @@ const TransactionListPage = () => {
         
         // 调用后端API获取交易记录
         const response = await fetch(
-          '/api/public/walletmanagement/transactionrecord',
+          '/api/walletmanagement/transactionrecord',
           {
             method: 'POST',
             headers: {

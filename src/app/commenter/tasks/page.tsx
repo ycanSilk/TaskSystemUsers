@@ -133,7 +133,7 @@ export default function CommenterTasksPage() {
       const token = localStorage.getItem('commenter_auth_token') || '';
       
       // 调用后端API获取任务数据，发送空对象作为请求体避免解析错误
-      const response = await fetch('/api/commenter/task/myacceptedtaskslist', {
+      const response = await fetch('/api/task/myacceptedtaskslist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -396,7 +396,7 @@ export default function CommenterTasksPage() {
         // 显示上传截图的提示
         setUploadStatus(prev => ({ ...prev, [taskId]: 'uploading' }));
         
-        const uploadResponse = await fetch('/api/commenter/upload-screenshot', {
+        const uploadResponse = await fetch('/api/upload-screenshot', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -422,7 +422,7 @@ export default function CommenterTasksPage() {
       }
       
       // 提交订单
-      const response = await fetch('/api/commenter/task-detail', {
+      const response = await fetch('/api/task-detail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -609,7 +609,7 @@ export default function CommenterTasksPage() {
       }
       
       // 提交链接到服务器
-      const response = await fetch('/api/commenter/upload-review-link', {
+      const response = await fetch('/api/upload-review-link', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

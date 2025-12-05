@@ -119,7 +119,7 @@ const ProgressTasksTab: React.FC<ProgressTasksTabProps> = ({ tasks, handleViewIm
       setIsLoading(true);
       try {
         // 调用取消任务的API
-        const response = await fetch('/api/commenter/task/canceltask', {
+        const response = await fetch('/api/task/canceltask', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ const ProgressTasksTab: React.FC<ProgressTasksTabProps> = ({ tasks, handleViewIm
         console.log('提交订单数据:', formData);
         
         // 调用后端API
-        const response = await fetch('/api/commenter/task/submittask', {
+        const response = await fetch('/api/task/submittask', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

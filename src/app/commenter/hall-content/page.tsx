@@ -181,7 +181,7 @@ export default function CommenterHallContentPage() {
       console.log('请求任务列表参数:', requestParams);
       
       // 调用后端API
-      const response = await fetch('/api/public/taskmodule/missionhall', {
+      const response = await fetch('/api/missionhall', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -300,7 +300,7 @@ export default function CommenterHallContentPage() {
 
       // 调用后端抢单API
       console.log('发送抢单请求到后端API');
-      const response = await fetch('/api/commenter/task/accepttask', {
+      const response = await fetch('/api/task/accepttask', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

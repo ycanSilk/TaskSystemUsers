@@ -84,7 +84,7 @@ export default function BankCardsPage() {
       }
       setError(null);
 
-      const response = await fetch('/api/public/bank/getbankcardslist', {
+      const response = await fetch('/api/bank/getbankcardslist', {
         method: 'GET', // 使用GET方法以匹配后端API
         headers: {
           'accept': 'application/json',
@@ -98,7 +98,7 @@ export default function BankCardsPage() {
 
       
       console.log('=== 开始调用银行卡列表API ===');
-      console.log('API URL:', '/api/public/bank/getbankcardslist');
+      console.log('API URL:', '/api/bank/getbankcardslist');
       console.log('请求方法:', response);
       
       
@@ -245,7 +245,7 @@ export default function BankCardsPage() {
       // 调用后端API设置默认银行卡
       console.log(`开始调用设置默认银行卡API，cardId: ${selectedCardId}`);
       
-      const response = await fetch('/api/public/bank/setdefaultbank', {
+      const response = await fetch('/api/bank/setdefaultbank', {
         method: 'PUT',
         headers: {
           'accept': 'application/json',

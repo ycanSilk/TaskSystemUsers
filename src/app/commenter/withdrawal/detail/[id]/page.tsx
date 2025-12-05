@@ -41,7 +41,7 @@ const WithdrawalDetailPage = () => {
     
     const fetchRecord = async () => {
       try {
-        const response = await fetch('/api/public/walletmanagement/transactionrecord', {
+        const response = await fetch('/api/walletmanagement/transactionrecord', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
