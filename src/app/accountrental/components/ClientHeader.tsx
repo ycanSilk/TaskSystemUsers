@@ -244,7 +244,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ user }) => {
           <CustomerServiceButton 
             buttonText="联系客服" 
             modalTitle="在线客服" 
-            userId={user?.id || 'guest'} 
+            CustomerServiceId="admin"
             className="text-white mr-1 font-bold text-lg"
           />
         )}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { notFound, redirect } from 'next/navigation';
+import { notFound, redirect, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 
 // 定义租赁信息数据类型，符合后端API返回格式
@@ -84,6 +84,7 @@ const AccountDetailPage = ({
 }) => {
   const { id } = params;
   const leaseInfoId = id || '';
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [leaseInfo, setLeaseInfo] = useState<LeaseInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -549,7 +550,15 @@ const AccountDetailPage = ({
                           <p className="text-red-500 text-xs mt-1">支付密码为6位</p>
                         )}
                       </div>
-                      
+                      <div className="mb-4 flex justify-between">
+                        <label 
+                          className="text-blue-500 cursor-pointer hover:underline"
+                          onClick={() => router.push('/commenter/profile/paymentsettings/setpaymentpwd')}
+                        >
+                          设置支付密码
+                        </label>
+                        <label className="text-gray-500">忘记支付密码</label>
+                      </div>
                       <div className="flex justify-between gap-3">
                         <Button 
                           variant="ghost" 

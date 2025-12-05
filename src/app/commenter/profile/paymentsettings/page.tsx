@@ -7,13 +7,18 @@ const PaymentSettingsPage: React.FC = () => {
   // 支付设置菜单项数据
   const paymentSettings = [
     {
-      id: 'order',
+      id: 'bind-alipay',
       title: '绑定支付宝',
       hasArrow: true,
     },
     {
-      id: 'payment-password',
+      id: 'set-payment-password',
       title: '设置支付密码',
+      hasArrow: true,
+    },
+    {
+      id: 'change-payment-password',
+      title: '修改支付密码',
       hasArrow: true,
     }
   ];
@@ -39,9 +44,11 @@ const PaymentSettingsPage: React.FC = () => {
               className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100"
             >
               <Link 
-                href={item.id === 'order' 
-                  ? '/publisher/profile/paymentsettings/bindalipay' 
-                  : '/publisher/profile/paymentsettings/setpaymentpwd'}
+                href={
+                  item.id === 'bind-alipay' ? '/commenter/profile/paymentsettings/bindalipay' :
+                  item.id === 'change-payment-password' ? '/commenter/profile/paymentsettings/changepaymentpwd' :
+                  '/commenter/profile/paymentsettings/setpaymentpwd'
+                }
                 passHref
               >
                 <button

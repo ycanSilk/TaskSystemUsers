@@ -205,7 +205,7 @@ export default function TopNavigationBar({ user }: TopNavigationBarProps) {
         <CustomerServiceButton 
           buttonText="联系客服" 
           modalTitle="在线客服"
-          userId={user?.id || 'guest'}
+          CustomerServiceId="admin"
           className="text-white"
         />
       

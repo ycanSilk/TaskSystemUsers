@@ -9,7 +9,7 @@ interface CustomerServiceButtonProps {
   className?: string;
   buttonText?: string;
   modalTitle?: string;
-  userId?: string;
+  CustomerServiceId?: string;
   chatUrl?: string;
   size?: number;
 }
@@ -18,7 +18,7 @@ export const CustomerServiceButton: React.FC<CustomerServiceButtonProps> = ({
   className = '',
   buttonText = '客服',
   modalTitle = '联系客服',
-  userId = 'admin',
+  CustomerServiceId = 'admin',
   chatUrl = 'http://localhost:8081/chatIndex?kefu_id=admin',
   size = 32
 }) => {
@@ -36,8 +36,8 @@ export const CustomerServiceButton: React.FC<CustomerServiceButtonProps> = ({
   };
 
   // 构建完整的聊天URL
-  const fullChatUrl = `http://localhost:8081/chatIndex?kefu_id=${userId}`;
-
+  const fullChatUrl = `http://localhost:8081/chatIndex?kefu_id=${CustomerServiceId}`;
+  console.log(fullChatUrl);
   return (
     <>
       {/* 客服按钮 */}
