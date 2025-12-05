@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-const config = require('../apiconfig/config.json');
+const config = require('../../apiconfig/config.json');
 export const dynamic = 'force-dynamic';
 // 主函数：处理GET请求
 export async function POST(request: Request) {
   // 从Cookie获取token
   const cookieStore = await cookies();
-  const tokenKeys = ['commenter_token', 'publisher_token', 'admin_token', 'user_token', 'auth_token', 'token'];
+  const tokenKeys = ['AcceptTask_token', 'commenter_token', 'publisher_token', 'admin_token', 'user_token', 'auth_token', 'token'];
   let token: string | undefined;
   
   for (const key of tokenKeys) {
