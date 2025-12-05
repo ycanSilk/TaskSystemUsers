@@ -288,10 +288,10 @@ const RentalRequestDetailPage: React.FC = () => {
             <div className="flex justify-end space-x-3">
               <button
                 onClick={handleContact}
-                className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-sm font-medium shadow-sm active:scale-95 transition-all flex items-center"
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium shadow-sm active:scale-95 transition-all"
               >
                 <MessageOutlined className="mr-1" />
-                联系对方
+                联系客服
               </button>
               <button
                 onClick={handleRentNow}

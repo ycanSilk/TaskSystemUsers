@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import CommenterHallContentPage from '../hall-content/page';
 import TopNavigationBar from '../components/TopNavigationBar';
-import axios from 'axios';
 import { saveUserInfo } from '@/hooks/useUser';
 import type { User } from '@/types';
 
@@ -18,41 +17,22 @@ export default function CommenterHallPage() {
       try {
         setIsLoading(true);
         setError(null);
-
-        // 从localStorage获取token信息（仅用于日志显示）
-        const tokenStorage = localStorage.getItem('commenterAuthToken');
-        console.log('获取用户信息开始，本地存储的token信息：', tokenStorage ? JSON.parse(tokenStorage) : null);
-       
-        const response = await axios.get<{
-          success: boolean;
-          data?: {
-            userInfo?: {
-              id: string;
-              username: string;
-              email?: string | null;
-              phone?: string;
-              createTime?: string;
-              avatar?: string;
-              invitationCode?: string;
-            };
-          };
-          message?: string;
-        }>('/apiuser/getloginuserinfo', { withCredentials: true });
-        const data = response.data;
-
-        if (data.success && data.data?.userInfo) {
+        const response = await fetch('/api/users/getloginuserinfo', { credentials: 'include' });
+        const result = await response.json(); 
+        console.log('获取用户信息API响应:', result);
+        if (response.ok && result.success && result.data?.userInfo) {
           // 构建符合User类型的用户信息对象
           const userInfo: User = {
-            id: data.data.userInfo.id,
-            username: data.data.userInfo.username,
-            email: data.data.userInfo.email || undefined,
-            phone: data.data.userInfo.phone || undefined,
+            id: result.data.userInfo.id,
+            username: result.data.userInfo.username,
+            email: result.data.userInfo.email || undefined,
+            phone: result.data.userInfo.phone || undefined,
             role: 'commenter',
             status: 'active',
-            createdAt: data.data.userInfo.createTime || new Date().toISOString(),
+            createdAt: result.data.userInfo.createTime || new Date().toISOString(),
             balance: 0, // 假设后端返回的用户信息中包含balance，如果没有则设为默认值
-            avatar: data.data.userInfo.avatar || undefined,
-            invitationCode: data.data.userInfo.invitationCode || undefined
+            avatar: result.data.userInfo.avatar || undefined,
+            invitationCode: result.data.userInfo.invitationCode || undefined
           };
 
           // 保存到localStorage
@@ -60,8 +40,8 @@ export default function CommenterHallPage() {
           setCurrentUser(userInfo);
           console.log('用户信息保存到localStorage:', userInfo);
         } else {
-          console.error('API请求失败:', data.message || '获取用户信息失败');
-          throw new Error(data.message || '获取用户信息失败');
+          console.error('API请求失败:', result.message || '获取用户信息失败');
+          throw new Error(result.message || '获取用户信息失败');
         }
       } catch (err) {
         console.error('获取用户信息异常:', err);

@@ -38,14 +38,14 @@ const MyAccountRentalPage = () => {
     },
     {
       id: 'rental-info',
-      title: '我发布的出租',
+      title: '我发布的出租信息',
       icon: <DeploymentUnitOutlined className="text-xl" />, // 替换为DeploymentUnitOutlined，表示发布/上线
       color: 'bg-purple-100',
       path: '/accountrental/my-account-rental/rentaloffer'
     },
     {
       id: 'lease-info',
-      title: '我发布的求租',
+      title: '我发布的求租信息',
       icon: <SearchOutlined className="text-xl" />, // 替换为SearchOutlined，表示寻找/搜索
       color: 'bg-amber-100',
       path: '/accountrental/my-account-rental/rentalrequest'

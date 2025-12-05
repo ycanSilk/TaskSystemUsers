@@ -181,7 +181,7 @@ export default function CommenterHallContentPage() {
       console.log('请求任务列表参数:', requestParams);
       
       // 调用后端API
-      const response = await fetch('/api/missionhall', {
+      const response = await fetch('/api/task/missionhall', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

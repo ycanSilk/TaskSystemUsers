@@ -22,46 +22,46 @@ export default function BottomNavigationBar({}: BottomNavigationBarProps) {
           href="/commenter/tasks?tab=ACCEPTED"
           className="flex flex-col items-center"
         >
-          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/tasks?tab=ACCEPTED') ? 'text-blue-500' : 'text-gray-500'}`}>
+          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/tasks?tab=ACCEPTED') ? 'text-blue-500' : 'text-black'}`}>
             <FileTextOutlined />
           </span>
-          <span className={`text-xs ${isActive('/tasks?tab=ACCEPTED') ? 'text-blue-500' : 'text-gray-500'}`}>评论进行</span>
+          <span className={`text-xs ${isActive('/tasks?tab=ACCEPTED') ? 'text-blue-500' : 'text-black'}`}>评论进行</span>
         </Link>
         <Link
           href="/accountrental/account-rental-market?from=commenter-hall"
           className="flex flex-col items-center"
         >
-          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/accountrental') ? 'text-blue-500' : 'text-gray-500'}`}>
+          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/accountrental') ? 'text-blue-500' : 'text-black'}`}>
             <PropertySafetyOutlined />
           </span>
-          <span className={`text-xs ${isActive('/accountrental') ? 'text-blue-500' : 'text-gray-500'}`}>租赁市场</span>
+          <span className={`text-xs ${isActive('/accountrental') ? 'text-blue-500' : 'text-black'}`}>租赁市场</span>
         </Link>
          <Link
           href="/commenter/hall"
           className="flex flex-col items-center"
         >
-          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/hall') ? 'text-blue-500' : 'text-gray-500'}`}>
+          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/hall') ? 'text-blue-500' : 'text-black'}`}>
             <HomeOutlined />
           </span>
-          <span className={`text-xs ${isActive('/hall') ? 'text-blue-500' : 'text-gray-500'}`}>评论抢单</span>
+          <span className={`text-xs ${isActive('/hall') ? 'text-blue-500' : 'text-black'}`}>评论抢单</span>
         </Link>
         <Link
           href="/commenter/invite"
           className="flex flex-col items-center"
         >
-          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/invite') ? 'text-blue-500' : 'text-gray-500'}`}>
+          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/invite') ? 'text-blue-500' : 'text-black'}`}>
             <UserAddOutlined />
           </span>
-          <span className={`text-xs ${isActive('/invite') ? 'text-blue-500' : 'text-gray-500'}`}>邀请分佣</span>
+          <span className={`text-xs ${isActive('/invite') ? 'text-blue-500' : 'text-black'}`}>邀请分佣</span>
         </Link>
         <Link
           href="/commenter/profile"
           className="flex flex-col items-center"
         >
-          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/profile') ? 'text-blue-500' : 'text-gray-500'}`}>
+          <span className={`text-lg w-6 h-6 flex items-center justify-center ${isActive('/profile') ? 'text-blue-500' : 'text-black'}`}>
             <UserOutlined />
           </span>
-          <span className={`text-xs ${isActive('/profile') ? 'text-blue-500' : 'text-gray-500'}`}>我的</span>
+          <span className={`text-xs ${isActive('/profile') ? 'text-blue-500' : 'text-black'}`}>我的</span>
         </Link>
       </div>
     </div>
