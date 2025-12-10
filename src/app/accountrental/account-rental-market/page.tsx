@@ -105,6 +105,7 @@ export default function AccountRentalMarketPage({ searchParams }: { searchParams
         }
         
         const result: RentalMarketResponse = await response.json();
+        console.log('请求成功', result);
         // 检查API响应是否成功
         if (result && result.success && result.data && result.data.list) {
           // 添加默认图片以确保UI渲染正常

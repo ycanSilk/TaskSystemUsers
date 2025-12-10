@@ -269,6 +269,8 @@ export default function DouyinAccountRentalPage() {
         description: formData.description
       };
       
+      console.log('提交的API请求数据:', requestData);
+      
       // 调用后端API提交数据
       const response = await fetch('/api/rental/publishrental', {
         method: 'POST',

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, Space, Avatar, Tabs, Modal, Radio, DatePicker, message } from 'antd';
-import EncryptedLink from '@/components/layout/EncryptedLink';
+import Link from 'next/link';
 import { CopyOutlined } from '@ant-design/icons';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
@@ -46,6 +46,7 @@ interface RentalOrder {
   renterId: string;
   orderNo: string;
   rentalDays: number;
+  leaseDays: number;
   totalAmount: number;
   depositAmount: number;
   platformFee: number;
@@ -473,7 +474,7 @@ const RentalOrderPage = () => {
       {/* 订单列表 */}
       <div className="">
         {filteredOrders.map((order) => (
-            <EncryptedLink href={`/accountrental/my-account-rental/myrentedorder/myrentedorder-detail/${order.id}`} key={order.id} className="block">
+            <Link href={`/accountrental/my-account-rental/myrentedorder/myrentedorder-detail/${order.id}`} key={order.id} className="block">
                 <Card className="border-0 rounded-none mb-3 cursor-pointer hover:shadow-md transition-shadow">
                 {/* 订单头部信息 */}
                 <div className="">
@@ -519,7 +520,7 @@ const RentalOrderPage = () => {
                   {/* 右侧信息区域 */}
                   <div className="flex-1 space-y-1">
                       <div className="text-sm text-black line-clamp-2 overflow-hidden">{order.displayAccountInfo}</div>
-                      <div className="text-sm">租赁时长：{order.rentalDays} 天</div>
+                      <div className="text-sm">租赁时长：{order.leaseDays} 天</div>
                       <div className="text-sm">￥{order.totalAmount.toFixed(2)}</div>
                   </div>
                 </div>
@@ -586,26 +587,11 @@ const RentalOrderPage = () => {
                           申请售后
                         </Button>
                       </>
-                    )}
-                    
-                    {order.status === 'COMPLETED' && (
-                      <Button 
-                        type="primary" 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleOrderAction(order.id, '再次租赁');
-                        }} 
-                        size="small"
-                        className="whitespace-nowrap"
-                      >
-                        再次租赁
-                      </Button>
-                    )}
+                    )}                    
                   </Space>
                 </div>
               </Card>
-            </EncryptedLink>
+            </Link>
           ))}
 
         {/* 如果没有订单 */}

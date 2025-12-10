@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, Space, Avatar, Tabs, Modal, Radio, DatePicker, message, ConfigProvider } from 'antd';
 
-import EncryptedLink from '@/components/layout/EncryptedLink';
+import Link from 'next/link';
 import { SearchOutlined, CopyOutlined } from '@ant-design/icons';
 import type { TabsProps } from 'antd';
 
@@ -379,7 +379,7 @@ const RentalOrderPage = () => {
       {/* 订单列表 */}
       <div className="">
         {filteredOrders.map((order) => (
-            <EncryptedLink href={`/accountrental/my-account-rental/myrentalorder/myrentalorder-detail/${order.id}`} key={order.id}>
+            <Link href={`/accountrental/my-account-rental/myrentalorder/myrentalorder-detail/${order.id}`} key={order.id}>
               <Card className="rounded-md mb-3 hover:shadow-md">
                 {/* 订单头部信息 */}
                 <div className="">
@@ -468,7 +468,7 @@ const RentalOrderPage = () => {
                   </Space>
                 </div>
               </Card>
-            </EncryptedLink>
+            </Link>
           ))}
 
         {/* 如果没有订单 */}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { notFound, redirect, useRouter } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 
 // 定义租赁信息数据类型，符合后端API返回格式
@@ -37,6 +37,8 @@ export interface ApiResponse<T> {
 // 调用后端API获取租赁信息详情
 const fetchLeaseInfoDetail = async (leaseInfoId: string): Promise<LeaseInfo> => {
   try {
+    // 调用本地API路由，将leaseInfoId通过headers传递给后端
+    console.log('正在发送请求，leaseInfoId通过headers传递:', leaseInfoId);
     const response = await fetch(`/api/rental/getleaseinfodetail?leaseInfoId=${leaseInfoId}`,{
         method: 'GET',
         headers: {
@@ -44,6 +46,9 @@ const fetchLeaseInfoDetail = async (leaseInfoId: string): Promise<LeaseInfo> => 
         }
       }
     );
+    console.log('这是获取租赁信息详情的日志输出:', response.status);
+    console.log('请求url:', `/api/rental/getleaseinfodetail?leaseInfoId=${leaseInfoId}`);
+    console.log(await response.clone().json());
     // 首先检查响应是否成功
     if (!response.ok) {
       // 尝试解析错误响应内容
@@ -79,7 +84,6 @@ const AccountDetailPage = ({
 }) => {
   const { id } = params;
   const leaseInfoId = id || '';
-  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [leaseInfo, setLeaseInfo] = useState<LeaseInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -157,23 +161,29 @@ const AccountDetailPage = ({
     try {
       setApiLoading(true);
       setApiError('');
-     
+      
+      console.log('开始创建租赁订单，租期:', leaseDays);
       // 创建租赁订单，使用用户选择的租期
       const result = await createLeaseOrder(leaseInfo.id, leaseDays);
-     
+      
+      console.log('创建订单API响应:', result);
+      
       // 根据API返回的数据结构，订单ID是orderNo字段
       let orderNo = null;
       if (result && result.success && result.data && result.data.orderNo) {
         orderNo = result.data.orderNo;
+        console.log('获取到订单号orderNo:', orderNo);
         // 保存订单号
         setOrderId(orderNo);
         // 显示支付密码模态框
+        console.log('设置显示支付模态框为true');
         setShowPaymentModal(true);
       } else {
         // 更宽容地处理可能的不同响应格式
         if (result && result.data && result.data.id) {
           // 如果找不到orderNo但有id，使用id作为后备
           orderNo = result.data.id;
+          console.log('使用id作为后备订单ID:', orderNo);
           setOrderId(orderNo);
           setShowPaymentModal(true);
         } else {
@@ -207,7 +217,8 @@ const AccountDetailPage = ({
       
       // 支付订单
       const result: boolean = await payLeaseOrder(orderId);
- 
+      
+      console.log('支付结果:', result);
       // 检查是否成功
       if (result) {
         // 支付成功，关闭模态框并显示成功提示
@@ -538,15 +549,7 @@ const AccountDetailPage = ({
                           <p className="text-red-500 text-xs mt-1">支付密码为6位</p>
                         )}
                       </div>
-                      <div className="mb-4 flex justify-between">
-                        <label 
-                          className="text-blue-500 cursor-pointer hover:underline"
-                          onClick={() => router.push('/commenter/profile/paymentsettings/setpaymentpwd')}
-                        >
-                          设置支付密码
-                        </label>
-                        <label className="text-gray-500">忘记支付密码</label>
-                      </div>
+                      
                       <div className="flex justify-between gap-3">
                         <Button 
                           variant="ghost" 
