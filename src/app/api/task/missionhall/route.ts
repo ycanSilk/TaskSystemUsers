@@ -128,8 +128,6 @@ export async function POST(request: Request) {
     try {
       if (config && config.baseUrl && config.endpoints && config.endpoints.task && config.endpoints.task.missionhall) {
         apiUrl = `${config.baseUrl}${config.endpoints.task.missionhall}`;
-        console.log('token:', token);
-        console.log('请求URL:', apiUrl, '请求参数:', requestParams);
       } else {
         throw new Error('配置信息不完整，无法构建API URL');
       }

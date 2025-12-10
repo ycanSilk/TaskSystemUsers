@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import Link from 'next/link';
+import EncryptedLink from '@/components/layout/EncryptedLink';
 import AlertModal from '../../components/ui/AlertModal';
 
 // 替代已删除的auth模块的内联实现

@@ -112,7 +112,6 @@ const RentalRequestsPage = () => {
         }
         
         const responseData: ApiResponse<RentalListResponse> = await response.json();
-        console.log('API响应数据:', responseData);
         if (!responseData.success) {
           throw new Error(responseData.message || '获取求租信息失败');
         }

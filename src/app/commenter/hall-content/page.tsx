@@ -178,8 +178,6 @@ export default function CommenterHallContentPage() {
         keyword: ''
       };
 
-      console.log('请求任务列表参数:', requestParams);
-      
       // 调用后端API
       const response = await fetch('/api/task/missionhall', {
         method: 'POST',
@@ -197,9 +195,6 @@ export default function CommenterHallContentPage() {
 
       // 解析响应数据
       const responseData: ApiResponse = await response.json();
-      
-      console.log('任务列表响应数据:', responseData);
-      
       // 检查API调用是否成功
       if (responseData.success) {
         // 处理返回的任务数据

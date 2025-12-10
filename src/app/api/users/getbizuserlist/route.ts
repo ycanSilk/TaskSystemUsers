@@ -58,9 +58,6 @@ export async function POST(request: Request) {
       signal: AbortSignal.timeout(5000)
     });
     const responseData = await response.json();
-    console.log('请求URL:', apiUrl);
-    console.log('请求token:', token);
-    console.log('这是获取个人用户列表API返回的原始响应:', responseData);
 
     // 处理非成功响应
     if (!response.ok) {

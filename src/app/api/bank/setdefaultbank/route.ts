@@ -39,15 +39,7 @@ export async function PUT(request: Request) {
       }
       // 没有请求体，Content-Length为0
     });
-    
-    console.log("这是后端文件src/app/api/bank/setdefaultbank/route.ts设置默认银行卡的API返回的日志输出:");
-    console.log("请求url:", apiUrl);
-    console.log("token:Bearer ", token);
-    console.log("前端页面传递过来的cardId:", cardId); 
-    console.log("响应状态:", response.status);
-    console.log("响应头:", response.headers);
-
-    
+   
     // 获取原始响应数据
     const responseData = await response.json();
     

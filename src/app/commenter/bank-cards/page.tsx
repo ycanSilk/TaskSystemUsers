@@ -96,11 +96,7 @@ export default function BankCardsPage() {
         credentials: 'include' as RequestCredentials
       });
 
-      
-      console.log('=== 开始调用银行卡列表API ===');
-      console.log('API URL:', '/api/bank/getbankcardslist');
-      console.log('请求方法:', response);
-      
+
       
  
       
@@ -109,51 +105,39 @@ export default function BankCardsPage() {
       response.headers.forEach((value, key) => {
         responseHeaders[key] = value;
       });
-      console.log('响应头:', responseHeaders);
       
       // 获取响应体文本
       const responseText = await response.text();
-      console.log('响应体原始文本:', responseText);
       
       // 尝试解析JSON
       let apiResponse: ApiResponse;
       try {
         if (responseText) {
           apiResponse = JSON.parse(responseText) as ApiResponse;
-          console.log('解析后的JSON数据:', apiResponse);
         } else {
-          console.warn('响应体为空');
           setError('获取银行卡列表失败：响应体为空');
           return;
         }
       } catch (jsonError) {
-        console.error('JSON解析错误:', jsonError);
-        console.error('原始响应文本:', responseText);
         throw new Error(`JSON解析错误: ${jsonError instanceof Error ? jsonError.message : String(jsonError)}`);
       }
       
       // 处理API返回的错误，即使HTTP状态码是200
       if (!apiResponse.success) {
         const errorMsg = apiResponse.message || '获取银行卡列表失败';
-        console.error('API返回错误:', errorMsg);
-        console.error('错误代码:', apiResponse.code);
         setError(errorMsg);
         return;
       }
       
       // 确保响应状态正常
       if (!response.ok) {
-        console.error('HTTP错误状态:', response.status);
         setError(`请求失败，状态码: ${response.status}`);
         return;
       }
-      
-      console.log('API调用成功');
-      
+
       // 处理返回的数据
       const cards = apiResponse.data || [];
-      console.log('银行卡数据列表长度:', cards.length);
-      console.log('银行卡数据列表:', cards);
+
       
       // 转换API返回的数据为前端显示需要的格式
       const formattedCards = cards.map((card: BankCard) => ({
@@ -171,12 +155,7 @@ export default function BankCardsPage() {
         cardType: '储蓄卡', // 默认类型
         bgColor: '#f82525ff' // 默认背景色
       }));
-      
-      console.log('格式化后的银行卡数据，带默认状态标记:', formattedCards);
-      
-      console.log('格式化后的银行卡数据:', formattedCards);
       setBankCards(formattedCards);
-      console.log('=== 银行卡列表API调用完成 ===');
     } catch (err) {
       console.error('获取银行卡列表出错:', err);
       if (err instanceof Error) {
@@ -242,9 +221,6 @@ export default function BankCardsPage() {
     if (!selectedCardId) return;
     
     try {
-      // 调用后端API设置默认银行卡
-      console.log(`开始调用设置默认银行卡API，cardId: ${selectedCardId}`);
-      
       const response = await fetch('/api/bank/setdefaultbank', {
         method: 'PUT',
         headers: {
@@ -259,7 +235,6 @@ export default function BankCardsPage() {
       
       // 获取响应体文本
       const responseText = await response.text();
-      console.log('设置默认银行卡API响应:', responseText);
       
       // 尝试解析JSON
       let apiResponse;
@@ -281,7 +256,6 @@ export default function BankCardsPage() {
       
       // 设置默认卡成功后刷新整个页面
       window.location.reload();
-      console.log('设置默认卡成功，刷新页面');
       
       // 显示成功提示框
       setShowSuccessToast(true);

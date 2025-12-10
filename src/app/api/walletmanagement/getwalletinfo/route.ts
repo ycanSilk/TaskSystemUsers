@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   // 从Cookie获取token
   const cookieStore = await cookies();
-  const tokenKeys = ['commenter_token', 'user_token', 'auth_token', 'publisher_token', 'token'];
+  const tokenKeys = ['AcceptTask_token'];
   let token: string | undefined;
   
   for (const key of tokenKeys) {
@@ -32,9 +32,7 @@ export async function GET() {
   });
   // 获取原始响应数据
   const responseData = await response.json();
-  console.log("这是获取钱包信息API请求成功响应:");
-  console.log('返回的原始数据:responseData', responseData);
-  console.log('输出token信息：Bearer ', token);
+
   // 直接返回API的原始响应
   return NextResponse.json(responseData, { status: response.status });
 }

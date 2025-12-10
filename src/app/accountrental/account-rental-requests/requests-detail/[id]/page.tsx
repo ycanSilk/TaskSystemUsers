@@ -99,14 +99,13 @@ const RentalRequestDetailPage: React.FC = () => {
   // 处理立即租赁
   const handleRentNow = (): void => {
     if (!request) return;
-    // 在实际项目中，应该跳转到租赁确认页
-    console.log('立即租赁请求:', request.id);
+   
   };
 
   // 处理联系对方
   const handleContact = (): void => {
     if (!request) return;
-    console.log('联系对方请求:', request.id);
+    
   };
 
   // 返回上一页

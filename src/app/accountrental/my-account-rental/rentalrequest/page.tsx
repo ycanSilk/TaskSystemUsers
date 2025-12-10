@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, Space, Avatar, Tabs, Modal, Radio, DatePicker, message } from 'antd';
-import Link from 'next/link';
+import EncryptedLink from '@/components/layout/EncryptedLink';
 import { SearchOutlined, CopyOutlined } from '@ant-design/icons';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
@@ -238,7 +238,7 @@ const RentalRequestPage = () => {
             <p className="text-sm text-red-500">{error}</p>
           </div>
         ) : filteredRequests.map((request) => (
-            <Link href={`/accountrental/my-account-rental/rentalrequest/rentalrequest-detail/${request.id}`} key={request.id} className="block">
+            <EncryptedLink href={`/accountrental/my-account-rental/rentalrequest/rentalrequest-detail/${request.id}`} key={request.id} className="block">
                 <Card className="border-0 rounded-none mb-3 cursor-pointer hover:shadow-md transition-shadow">
                 {/* 求租头部信息 */}
                 <div className="flex justify-between items-center p-0">
@@ -360,7 +360,7 @@ const RentalRequestPage = () => {
                   </Space>
                 </div>
               </Card>
-            </Link>
+            </EncryptedLink>
           ))}
 
         {/* 如果没有求租信息 */}

@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, Space, Avatar, Tabs, Modal, Radio, DatePicker, message } from 'antd';
-import Link from 'next/link';
+import EncryptedLink from '@/components/layout/EncryptedLink';
 import { PhoneOutlined, CopyOutlined } from '@ant-design/icons';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
@@ -258,7 +258,7 @@ const RentalOfferPage = () => {
     }
 
     return filteredOffers.map((offer) => (
-      <Link href={`/accountrental/my-account-rental/rentaloffer/rentaloffer-detail/${offer.id}`} key={offer.id}>
+      <EncryptedLink href={`/accountrental/my-account-rental/rentaloffer/rentaloffer-detail/${offer.id}`} key={offer.id}>
         <Card className="border-0 rounded-none mb-3 cursor-pointer hover:shadow-md transition-shadow">
           {/* 出租头部信息 */}
           <div className="flex items-center">
@@ -377,7 +377,7 @@ const RentalOfferPage = () => {
             </Space>
           </div>
         </Card>
-      </Link>
+      </EncryptedLink>
     ));
   };
 

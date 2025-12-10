@@ -225,7 +225,7 @@ const TransactionListPage = () => {
             <div>
               {/* 显示交易记录总数信息 */}
               <div className="px-4 py-2 border-b border-gray-100 bg-gray-50">
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-red-500">
                   共显示最近一年的 {transactions.filter(t => {
                     const isIncome = t.amount > 0;
                     if (activeTab === 'recharge') return isIncome;
@@ -277,9 +277,6 @@ const TransactionListPage = () => {
                         <div className="flex justify-between items-center">
                           <div className="text-xs text-gray-500">
                             {formatDate(date)} {time}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            余额: {transaction.afterBalance.toFixed(2)}
                           </div>
                         </div>
                       </div>

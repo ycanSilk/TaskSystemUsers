@@ -31,11 +31,7 @@ export async function GET(request: Request) {
     });
     // 获取原始响应数据
     const responseData = await response.json();
-    console.log("这是获取默认银行卡API返回的日志输出:");
-    console.log("请求url:", apiUrl);
-    console.log("token:Bearer ", token);
-    console.log("返回的数据:", response);
-    console.log("返回的数据:", responseData);
+
 
     // 检查API返回的成功状态，即使HTTP状态码是200
     if (!responseData.success && responseData.code === 500) {

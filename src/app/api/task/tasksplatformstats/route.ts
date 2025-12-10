@@ -88,12 +88,7 @@ export async function GET(request: Request) {
 
     // 获取响应数据
     const responseData = await response.json();
-    
-    console.log('平台任务统计API日志:');
-    console.log('请求URL:', targetUrl.toString());
-    console.log('请求token:', token);
-    console.log('响应数据:', responseData);
-
+   
     // 返回成功响应
     return NextResponse.json(responseData, { status: response.status });
 

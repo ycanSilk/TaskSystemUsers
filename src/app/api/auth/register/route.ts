@@ -90,8 +90,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // 构建完整的API URL
     const apiUrl = `${config.baseUrl}${config.endpoints.auth.register}`;
-    console.log('注册API请求URL:', apiUrl);
-    console.log('注册API请求数据:', backendRequestData);
+
 
     // 调用实际的后端API
     const response = await fetch(apiUrl, {

@@ -39,7 +39,7 @@ export default function PersonalInfoPage() {
       setError(null);
       
       // 执行API请求，使用credentials: 'include'自动携带HttpOnly Cookie
-      const apiUrl = '/apiuser/getloginuserinfo';
+      const apiUrl = '/api/users/getloginuserinfo';
       const response = await fetch(apiUrl, {
         method: 'GET',
         headers: {
@@ -186,12 +186,7 @@ export default function PersonalInfoPage() {
               />
             </div>
           </div>
-
-          {/* 接单账号ID */}
-          <InfoItem label="接单账号ID" value={userProfile.id} editable={false} />
           
-          {/* 邀请码 */}
-          <InfoItem label="邀请码" value={userProfile.invitationCode || '未设置'} editable={false} />
 
           {/* 名字 */}
           <InfoItem label="用户名" value={userProfile.name || '未设置'} editable={false} />
@@ -202,8 +197,12 @@ export default function PersonalInfoPage() {
           {/* 邮箱 */}
           <InfoItem label="邮箱" value={userProfile.email || '未填写'} editable={false} />
           
+          {/* 邀请码 */}
+          <InfoItem label="邀请码" value={userProfile.invitationCode || '未设置'} editable={false} />
+
           {/* 注册时间 */}
           <InfoItem label="注册时间" value={userProfile.createdAt || '未获取'} editable={false} />
+
 
           <div onClick={() => router.push('/commenter/profile/changepwd')} className="p-4 border-b border-gray-100  justify-between text-center items-center cursor-pointer hover:bg-blue-200">
             修改密码

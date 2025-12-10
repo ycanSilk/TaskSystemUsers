@@ -38,18 +38,7 @@ interface TransactionResponse {
   timestamp: number;
 }
 
-//钱包信息接口定义
-interface WalletInfoInfo {
-  userId: string,
-  totalBalance: number,
-  availableBalance: number,
-  frozenBalance: number,
-  totalIncome: number,
-  totalExpense: number,
-  status: string,
-  currency: string,
-  createTime: string
-}
+
 // 钱包信息类型定义
   interface WalletInfoResponse {
     code: number;
@@ -85,19 +74,22 @@ const BalancePage = () => {
         setLoading(true);
         setError(null);
         // 首先调用获取钱包信息API
-        const walletResponse = await fetch('/api/walletmanagement/getwalletinfo', {
+
+        const WalletInfoResponse = await fetch('/api/walletmanagement/getwalletinfo', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
         });
-        if (!walletResponse.ok) {
-          throw new Error(`获取钱包信息失败: ${walletResponse.status}`);
+        
+        if (!WalletInfoResponse.ok) {
+          throw new Error(`获取钱包信息失败: ${WalletInfoResponse.status}`);
         }
-        const walletData: WalletInfoResponse = await walletResponse.json();       
+        const walletData: WalletInfoResponse = await WalletInfoResponse.json();       
         if (walletData.success && walletData.data) {
           // 设置余额和冻结金额
           setBalance(walletData.data.availableBalance || 0);
+          setTotalBalance(walletData.data.totalBalance || 0);
           setFrozenBalance(walletData.data.frozenBalance || 0);
         } else {
           throw new Error(walletData.message || '获取钱包信息失败');
@@ -202,7 +194,6 @@ const BalancePage = () => {
 
   // 处理查看资金流水
   const handleViewAllTransactions = () => {
-    console.log('查看全部资金流水');
     // 跳转到交易详情页面
     router.push('/commenter/balance/transaction-list' as any);
   };
@@ -378,9 +369,7 @@ const BalancePage = () => {
                           <div className="text-xs text-gray-500">
                             {formatDate(date)} {time}
                           </div>
-                          <div className="text-xs text-gray-500">
-                            余额: {transaction.afterBalance.toFixed(2)}
-                          </div>
+                         
                         </div>
                       </div>
                     </div>

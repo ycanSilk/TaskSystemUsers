@@ -9,7 +9,7 @@ import { BellOutlined } from '@ant-design/icons';
 
 // 导入路由配置
 import { 
-  getFlatRouteTitleMap, 
+  flatRouteTitleMap, 
   firstLevelPages, 
   routeHierarchyMap, 
   dynamicRoutePatterns 
@@ -52,7 +52,6 @@ export default function TopNavigationBar({ user }: TopNavigationBarProps) {
 
   // 更新页面标题
   const updatePageTitle = (currentPath: string) => {
-    const flatRouteTitleMap = getFlatRouteTitleMap();
     
     // 尝试精确匹配
     if (flatRouteTitleMap[currentPath]) {
@@ -233,16 +232,16 @@ export default function TopNavigationBar({ user }: TopNavigationBarProps) {
           
           {/* 下拉菜单 */}
           {showDropdown && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden z-10 transform transition-all duration-200 origin-top-right animate-fade-in-down">
+            <div className="absolute right-0 mt-2 w-[100px] bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden z-10 transform transition-all duration-200 origin-top-right animate-fade-in-down">
               {/* 个人中心按钮 */}
               <button 
                 onClick={() => {
-                  router.push('/commenter/profile/settings');
+                  router.push('/commenter/profile/userinfo');
                   setShowDropdown(false);
                 }}
                 className="w-full text-left px-4 py-3 border-b border-gray-100 text-gray-800 font-medium text-sm hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
               >
-                个人中心
+                个人信息
               </button>
               
               {/* 退出登录按钮 */}

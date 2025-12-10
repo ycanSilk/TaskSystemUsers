@@ -51,13 +51,7 @@ export async function POST(request: Request) {
 
     // 获取原始响应数据
     const responseData = await response.json();
-    console.log("这是添加银行卡的API返回的日志输出:");
-    console.log("请求url:", apiUrl);
-    console.log("token:Bearer ", token);
-    console.log("请求参数:", newRequestBody);
-    console.log("响应状态:", response.status);
-    console.log("响应头:", response.headers);
-    console.log("返回的数据:", responseData);
+
     
     // 直接返回外部API的原始响应
     return NextResponse.json(responseData, { status: response.status });

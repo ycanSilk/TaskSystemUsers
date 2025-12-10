@@ -37,7 +37,6 @@ export const CustomerServiceButton: React.FC<CustomerServiceButtonProps> = ({
 
   // 构建完整的聊天URL
   const fullChatUrl = `http://localhost:8081/chatIndex?kefu_id=${CustomerServiceId}`;
-  console.log(fullChatUrl);
   return (
     <>
       {/* 客服按钮 */}

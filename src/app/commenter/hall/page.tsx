@@ -19,7 +19,6 @@ export default function CommenterHallPage() {
         setError(null);
         const response = await fetch('/api/users/getloginuserinfo', { credentials: 'include' });
         const result = await response.json(); 
-        console.log('获取用户信息API响应:', result);
         if (response.ok && result.success && result.data?.userInfo) {
           // 构建符合User类型的用户信息对象
           const userInfo: User = {
@@ -38,32 +37,11 @@ export default function CommenterHallPage() {
           // 保存到localStorage
           saveUserInfo(userInfo);
           setCurrentUser(userInfo);
-          console.log('用户信息保存到localStorage:', userInfo);
         } else {
-          console.error('API请求失败:', result.message || '获取用户信息失败');
           throw new Error(result.message || '获取用户信息失败');
         }
       } catch (err) {
         console.error('获取用户信息异常:', err);
-        // 如果API请求失败，尝试从localStorage获取作为后备
-        try {
-          const authDataStr = localStorage.getItem('commenter_auth_data');
-          if (authDataStr) {
-            const authData = JSON.parse(authDataStr);
-            const userInfo: User = {
-              id: authData.userId || '',
-              username: authData.username || '',
-              role: 'commenter',
-              status: 'active',
-              createdAt: new Date().toISOString(),
-              balance: 0
-            };
-            setCurrentUser(userInfo);
-          }
-        } catch (localStorageErr) {
-          console.error('从localStorage获取用户信息失败:', localStorageErr);
-          setError('获取用户信息失败，请稍后重试');
-        }
       } finally {
         setIsLoading(false);
       }

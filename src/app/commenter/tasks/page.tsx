@@ -142,21 +142,10 @@ export default function CommenterTasksPage() {
         },
         body: JSON.stringify({})
       });
-      
-      // 检查响应状态
-      console.log('API响应状态码:', response.status);
-      console.log('API响应头部信息:', Array.from(response.headers.entries()));
-
+     
       // 解析响应数据
       const responseData: ApiResponse = await response.json();
-      // 记录API响应日志，帮助调试
-      console.log('API返回完整数据:', responseData);
-      console.log('API返回状态码:', responseData.code);
-      console.log('API返回消息:', responseData.message);
-      console.log('API返回数据结构F12输出:', JSON.stringify(responseData.data, null, 2));
-      
-
-      // 检查响应状态码
+     
       if (responseData.code === 401) {
         // 未授权错误处理
         setErrorMessage(responseData.message || '未登录，请先登录');
@@ -166,8 +155,6 @@ export default function CommenterTasksPage() {
       
       // 检查API响应是否成功
       if (!responseData.success || !responseData.data) {
-        // API调用成功但数据为空或错误
-        console.log('API返回数据异常，状态:', responseData.code, '消息:', responseData.message);
         setTasks([]);
         setErrorMessage(responseData.message || 'API数据异常');
         return;
@@ -175,8 +162,6 @@ export default function CommenterTasksPage() {
       
       // 更新任务列表 - 即使list为空也是正常情况，不应显示错误
       const taskList = responseData.data.list || [];
-
-      console.log('设置任务列表:', taskList.length, '个任务');
       setTasks(taskList);
       
       // 如果任务列表为空，设置相应的提示信息
@@ -810,13 +795,6 @@ export default function CommenterTasksPage() {
       <div className="mx-4 mt-6">
         {activeTab === 'ACCEPTED' && (
           <>
-            {console.log('所有任务:', tasks)}
-            {console.log('进行中任务数量:', tasks.filter(task => task.status === 'ACCEPTED').length)}
-            {console.log('任务状态值:', tasks.map(task => task.status))}
-            {console.log('待审核任务数量:', tasks.filter(task => task.status === 'SUBMITTED').length)}
-            {console.log('任务状态值:', tasks.map(task => task.status))}
-            {console.log('已完成任务数量:', tasks.filter(task => task.status === 'COMPLETED').length)}
-            {console.log('任务状态值:', tasks.map(task => task.status))}
             <ProgressTasksTab 
               tasks={tasks.filter(task => task.status === 'ACCEPTED')}
               handleViewImage={handleViewImage}
@@ -838,7 +816,7 @@ export default function CommenterTasksPage() {
             {tasks.filter(task => task.status === 'SUBMITTED').length > 0 ? (
               <PendingReviewTasksTab
                 tasks={tasks.filter(task => task.status === 'SUBMITTED')}
-                handleViewDetails={(taskId) => console.log('View details for:', taskId)}
+                handleViewDetails={handleViewDetails}
                 handleViewImage={handleViewImage}
                 getTaskTypeName={(taskType) => taskType || '评论'}
                 isLoading={isLoading}
