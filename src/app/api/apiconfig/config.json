@@ -60,6 +60,11 @@
       "agentstats": "/agent/stats",
       "myagentteam": "/agent/team",
       "myinvitationcode": "/agent/invitation-code"
+    },
+    "message": {
+      "mymessagelist": "/msgNotice/my-msgList",
+      "messagedelete": "/msgNotice/${msgId}/del",
+      "messagealready": "/msgNotice/${msgId}/read"
     }
   },
   "mockMode": false,
