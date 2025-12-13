@@ -26,22 +26,22 @@ interface ApiResponse {
 interface ApiBalanceResponse {
   code: number;
   message: string;
-  data: WalletInfo[];
+  data: {
+    userId: string;
+    totalBalance: number;
+    availableBalance: number;
+    frozenBalance: number;
+    totalIncome: number;
+    totalExpense: number;
+    status: string;
+    currency: string;
+    createTime: string;
+    alipayAccount: string;
+  };
   success: boolean;
   timestamp: number;
 }
 
-interface WalletInfo {
-  userId: string;
-  totalBalance: number;
-  availableBalance: number;
-  frozenBalance: number;
-  totalIncome: number;
-  totalExpense: number;
-  status: string;
-  currency: string;
-  createTime: string;
-}
 
 interface BankCard {
   id: string;
@@ -61,7 +61,7 @@ interface AlipayAccount {
 
 const WithdrawalPage = () => {
   const router = useRouter();
-  const [withdrawalMethod, setWithdrawalMethod] = useState<'bank' | 'alipay'>('bank');
+  const [withdrawalMethod, setWithdrawalMethod] = useState<'bank' | 'alipay'>('alipay');
   const [amount, setAmount] = useState('');
   const [selectedBankId, setSelectedBankId] = useState<string>('');
   const [selectedAlipayId, setSelectedAlipayId] = useState<string>('');
@@ -74,6 +74,88 @@ const WithdrawalPage = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [paymentPassword, setPaymentPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [username, setUsername] = useState('用户');
+  const [savedUserInfo, setSavedUserInfo] = useState<any>(null);
+
+  // 从localStorage获取用户名
+  useEffect(() => {
+    // 添加一个标记，确保只执行一次完整的获取流程
+    let isMounted = true;
+    let retryCount = 0;
+    const maxRetries = 5;
+    const retryDelay = 500;
+    
+    // 检查客户端是否完全加载完成
+    const isClientReady = () => {
+      return typeof window !== 'undefined' && 
+             window.localStorage && 
+             window.document.readyState === 'complete';
+    };
+    
+    // 定义获取用户信息的函数
+    const getUserInfo = () => {
+      if (!isMounted || typeof window === 'undefined' || !window.localStorage) {
+        return;
+      }
+      
+      try {
+        const savedUserInfoStr = localStorage.getItem('commenter_user_info');
+        const userInfo = savedUserInfoStr ? JSON.parse(savedUserInfoStr) : null;
+        console.log('从localStorage读取的用户信息:', userInfo);
+        
+        if (userInfo) {
+          setSavedUserInfo(userInfo);
+          // 同时更新username状态作为备用
+          if (userInfo.username) {
+            setUsername(userInfo.username);
+          }
+        } else if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(getUserInfo, retryDelay);
+        }
+      } catch (error) {
+        console.error('获取用户信息失败:', error);
+        if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(getUserInfo, retryDelay);
+        }
+      }
+    };
+    
+    // 当页面加载完成后调用获取用户信息的函数
+    if (isClientReady()) {
+      getUserInfo();
+    } else {
+      // 如果页面未完全加载，等待DOMContentLoaded事件
+      const handleDOMContentLoaded = () => {
+        if (isMounted) {
+          getUserInfo();
+        }
+      };
+      
+      window.addEventListener('DOMContentLoaded', handleDOMContentLoaded);
+      
+      // 设置一个超时，以防DOMContentLoaded事件延迟
+      const timeoutId = setTimeout(() => {
+        if (isMounted && window.document.readyState !== 'complete') {
+          getUserInfo();
+        }
+      }, 2000);
+      
+      // 组件卸载时清理事件监听器和定时器
+      return () => {
+        isMounted = false;
+        window.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
+        clearTimeout(timeoutId);
+      };
+    }
+    
+    // 组件卸载时清理
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+  
 
   // 调用后端API获取银行卡列表数据
   useEffect(() => {
@@ -127,8 +209,8 @@ const WithdrawalPage = () => {
         }
         
         // 检查余额API返回状态
-        if (apiBalanceResponse.success && apiBalanceResponse.data.length > 0) {
-          setAvailableBalance(apiBalanceResponse.data[0].availableBalance);
+        if (apiBalanceResponse.success && apiBalanceResponse.data.availableBalance !== undefined) {
+          setAvailableBalance(apiBalanceResponse.data.availableBalance);
         }
         
         // 将API返回的数据转换为前端显示需要的格式
@@ -141,19 +223,21 @@ const WithdrawalPage = () => {
           isDefault: card.isDefault
         }));
         
-        // 模拟支付宝账户数据（暂不调用API）
-        const mockAlipayAccounts: AlipayAccount[] = [
-          {
-            id: 'alipay-001',
-            accountName: '测试',
-            accountNumber: '13794719208',
-            isDefault: true,
-            
-          }
-        ];
 
+        const alipayAccount = apiBalanceResponse.data.alipayAccount;
+        console.log('alipayAccount:', alipayAccount);
+        console.log('savedUserInfo:', savedUserInfo);
+        const formattedAlipayAccounts: AlipayAccount[] = alipayAccount 
+          ? [{ 
+              id: savedUserInfo?.id || 'alipay-1',
+              accountName: savedUserInfo?.username || username, 
+              accountNumber: alipayAccount, 
+              isDefault: true 
+            }] 
+          : [];
+           
         setBankCards(formattedBankCards);
-        setAlipayAccounts(mockAlipayAccounts);
+        setAlipayAccounts(formattedAlipayAccounts);
 
         // 设置默认选择的卡片 - 将isDefault字段为true的银行卡设置为默认选中状态
         if (formattedBankCards.length > 0) {
@@ -161,8 +245,8 @@ const WithdrawalPage = () => {
           setSelectedBankId(defaultBank.id);
         }
 
-        if (mockAlipayAccounts.length > 0) {
-          const defaultAlipay = mockAlipayAccounts.find(acc => acc.isDefault) || mockAlipayAccounts[0];
+        if (formattedAlipayAccounts.length > 0) {
+          const defaultAlipay = formattedAlipayAccounts.find(acc => acc.isDefault) || formattedAlipayAccounts[0];
           setSelectedAlipayId(defaultAlipay.id);
         }
       } catch (err) {
@@ -178,7 +262,7 @@ const WithdrawalPage = () => {
     };
 
     fetchPaymentMethods();
-  }, []);
+  }, [savedUserInfo]);
 
   // 验证提现金额
   const validateAmount = (value: string): { isValid: boolean; message: string } => {
@@ -385,20 +469,6 @@ const WithdrawalPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-4 px-3">
-      {/* 页面标题 */}
-      <div className="mb-6">
-        <div className="flex items-center mb-2">
-          <button 
-            onClick={() => router.back()} 
-            className="mr-2 p-1 rounded-full hover:bg-gray-200"
-          >
-            ←
-          </button>
-          <h1 className="text-xl font-medium">申请提现</h1>
-        </div>
-       
-      </div>
-
       <div className="mb-6 border border-gray-200 rounded-lg shadow-sm p-4">
         <div className="">
             <div className='p-4 bg-green-500 flex flex-col items-center justify-center h-[120px] rounded-md mb-4'> 
@@ -455,8 +525,28 @@ const WithdrawalPage = () => {
       <div className="mb-6 border border-gray-200 rounded-lg shadow-sm p-4">
         <div className="p-4">
           <h2 className="text-lg font-medium mb-4">提现方式</h2>
-          
           <div className="space-y-4">
+            {/* 快捷提现方式选择 */}
+
+            {/* 默认支付宝提现，在第一行 */}
+            <div 
+              className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${withdrawalMethod === 'alipay' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}
+              onClick={() => !loading && !success && handleMethodChange('alipay')}
+              style={{ opacity: (loading || success) ? 0.6 : 1 }}
+            >
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${withdrawalMethod === 'alipay' ? 'border-blue-500' : 'border-gray-300'}`}>
+                {withdrawalMethod === 'alipay' && <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />}
+              </div>
+              <AlipayOutlined className="text-blue-500" />
+              <span>支付宝</span>
+              {alipayAccounts.length > 0 && (
+                <span className="ml-auto bg-gray-100 text-gray-800 text-xs rounded px-2 py-1">
+                  {alipayAccounts.length}个账户
+                </span>
+              )}
+            </div>
+
+            {/* 银行卡提现 */}
             <div 
               className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${withdrawalMethod === 'bank' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}
               onClick={() => !loading && !success && handleMethodChange('bank')}
@@ -474,22 +564,7 @@ const WithdrawalPage = () => {
               )}
             </div>
             
-            <div 
-              className={`flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors ${withdrawalMethod === 'alipay' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}
-              onClick={() => !loading && !success && handleMethodChange('alipay')}
-              style={{ opacity: (loading || success) ? 0.6 : 1 }}
-            >
-              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${withdrawalMethod === 'alipay' ? 'border-blue-500' : 'border-gray-300'}`}>
-                {withdrawalMethod === 'alipay' && <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />}
-              </div>
-              <AlipayOutlined className="text-blue-500" />
-              <span>支付宝</span>
-              {alipayAccounts.length > 0 && (
-                <span className="ml-auto bg-gray-100 text-gray-800 text-xs rounded px-2 py-1">
-                  {alipayAccounts.length}个账户
-                </span>
-              )}
-            </div>
+            
           </div>
         </div>
       </div>
@@ -538,7 +613,6 @@ const WithdrawalPage = () => {
                   onClick={() => setSelectedAlipayId(acc.id)}
                 >
                   <div>
-                    <div className="font-medium">{acc.accountName}</div>
                     <div className="text-sm  mt-1">{acc.accountNumber}</div>
                   </div>
                   <div className="flex items-center">
@@ -597,7 +671,6 @@ const WithdrawalPage = () => {
                 value={paymentPassword}
                 onChange={(e) => {
                   const value = e.target.value;
-                  console.log('Password input changed:', value);
                   setPaymentPassword(value);
                 }}
                 placeholder="请输入支付密码"

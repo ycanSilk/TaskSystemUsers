@@ -159,18 +159,33 @@ export default function TopNavigationBar({ user }: TopNavigationBarProps) {
         },
         credentials: 'include' // 包含Cookie信息
       });
-
+      if(response.ok){console.log('退出登录成功')}
       // 解析响应数据
       const data = await response.json();
+
+      const clearAllAuth = () => {
+        if (typeof localStorage !== 'undefined') {
+          try {
+            localStorage.removeItem('commenter_user_info');
+            localStorage.removeItem('commenter_active_session');
+            localStorage.removeItem('commenter_active_session_last_activity');
+          } catch (error) {
+            console.error('清除认证信息失败:', error);
+          }
+        }
+      };
       
       // 无论成功还是失败，都清除本地认证状态并跳转登录页
       // 在实际应用中，可以根据响应状态提供不同的用户反馈
       if (data.success) {
         console.log('退出登录成功', data);
+        clearAllAuth();
       } else {
         console.warn('退出登录时遇到问题', data);
         // 即使API返回错误，也继续执行本地登出逻辑
       }
+
+      
     } catch (error) {
       console.error('退出登录请求失败', error);
       // 即使请求失败，也执行本地登出逻辑

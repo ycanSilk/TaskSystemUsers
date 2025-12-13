@@ -7,18 +7,16 @@ const encryptableRoutes = ['accountrental', 'commenter'];
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const pathParts = pathname.split('/').filter(Boolean);
-
   // 检查是否需要解密（如果第一部分是加密的）
   if (pathParts.length > 0 && isEncryptedRoute(pathParts[0])) {
     try {
-      // 解密路由
+     
       const decryptedPath = decryptRoute(pathParts[0]);
       const decryptedParts = decryptedPath.split('/').filter(Boolean);
       
       // 构建新的路径
       const remainingPath = pathParts.slice(1).join('/');
       const newPath = `/${decryptedParts.join('/')}${remainingPath ? `/${remainingPath}` : ''}`;
-      
       // 创建新的URL
       const newUrl = new URL(request.nextUrl.origin + newPath + search);
       

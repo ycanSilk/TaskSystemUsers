@@ -7,7 +7,6 @@ import config from '../../apiconfig/config.json';
 interface LoginRequest {
   username: string;
   password: string;
-  captcha: string; // 新增验证码字段
 }
 
 // 定义响应接口
@@ -20,7 +19,7 @@ interface ApiResponse {
 // 基础验证函数
 function validateLoginData(data: LoginRequest): { isValid: boolean; error?: string } {
   // 检查必填字段
-  if (!data.username || !data.password || !data.captcha) {
+  if (!data.username || !data.password) {
     return { isValid: false, error: '用户名、密码和验证码为必填项' };
   }
 
@@ -32,12 +31,6 @@ function validateLoginData(data: LoginRequest): { isValid: boolean; error?: stri
   if (data.password.length < 6 || data.password.length > 20) {
     return { isValid: false, error: '密码长度必须在6-20个字符之间' };
   }
-
-  // 验证验证码长度
-  if (data.captcha.length !== 4) {
-    return { isValid: false, error: '验证码必须是4个字符' };
-  }
-
   return { isValid: true };
 }
 
@@ -88,8 +81,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // 构建后端API请求数据
     const backendRequestData = {
       username: requestData.username.trim(),
-      password: requestData.password,
-      captcha: requestData.captcha // 新增验证码参数
+      password: requestData.password
     };
 
     // 调用实际的后端API
@@ -120,13 +112,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // 解析后端响应
     const result = await response.json();
+    console.log('后端API响应结果:', result);
     
     // 验证返回的数据结构
     if (!result || !result.data) {
       console.error('登录响应数据无效');
       return NextResponse.json<ApiResponse>({
         success: false,
-        message: '登录失败，无效的响应数据'
+        message: result.message
       }, { status: 500 });
     }
 
@@ -142,6 +135,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     
     const userId = result.data.userId || '';
     const userInfo = result.data.userInfo || {};
+    console.log('从后端API获取的userInfo:', userInfo);
+    
     const expiresIn = result.data.expiresIn || 86400; // 默认24小时
     const expiryDate = new Date(Date.now() + expiresIn * 1000);
     
@@ -152,11 +147,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       data: {
         userId,
         username: requestData.username,
-        userInfo: { ...userInfo }, // 直接使用用户信息，不添加role字段
+        userInfo: { 
+          ...userInfo,
+          username: requestData.username // 确保userInfo中包含username字段
+        }, // 直接使用用户信息，不添加role字段
         expiresIn,
         expiresAt: expiryDate.toISOString()
       }
     };
+    
+    console.log('返回给前端的响应数据:', responseData);
     
     // 创建响应对象
     const successResponse = NextResponse.json(responseData, { status: 200 });
@@ -166,13 +166,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     
     // 关键日志
     console.log(`用户 ${requestData.username} 登录成功`);
-    console.log(`设置token信息: ${token}`);
+    console.log(`设置token信息: Bearer ${token}`);
     console.log(result);
     
     return successResponse;
   } catch (error) {
-    console.error('登录过程中发生错误:', error);
-    
     // 处理不同类型的错误
     let errorMessage = '登录失败，请稍后重试';
     let statusCode = 500;

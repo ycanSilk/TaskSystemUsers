@@ -21,9 +21,6 @@ export async function GET(request: Request) {
   // 从请求头获取用户ID
 
    const userId = request.headers.get('X-User-Id') || '';
-
-    console.log('从请求头获取到的userId:', userId);
-  
   // token已在前面检查过
   
   // 解析请求体 - GET请求不需要请求体
@@ -34,8 +31,6 @@ export async function GET(request: Request) {
   
   // 直接调用外部API并返回原始响应
   try {
-    console.log('从请求头获取到的userId:', userId);
-    // 构造请求头，添加用户ID
     const headers: HeadersInit = {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'

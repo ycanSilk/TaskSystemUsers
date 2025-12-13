@@ -235,7 +235,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ user }) => {
   }, [showDropdown]);
 
   const handleDashboardClick = () => {  
-    router.push(getEncryptedPath('/publisher/dashboard'));
+    router.push(getEncryptedPath('/commenter/hall'));
   };
 
   const handleUserAvatarClick = () => {
@@ -246,7 +246,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ user }) => {
   const handleLogout = () => {
     // 清除用户登录状态（实际项目中可能需要调用API或清除本地存储）
     // 重定向到登录页面
-    router.push('/');
+    router.push('/commenter/auth/login');
   };
 
   return (

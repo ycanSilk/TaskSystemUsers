@@ -250,7 +250,7 @@ export function useUser(): UseUserReturn {
       if (updatedUser.role === 'commenter') {
         try {
           // 更新评论者用户信息
-          localStorage.setItem('commenter_user_info', JSON.stringify(updatedUser));
+          localStorage.setItem('AcceptTask_token', JSON.stringify(updatedUser));
         } catch (error) {
           console.error('更新评论者用户信息失败:', error);
         }

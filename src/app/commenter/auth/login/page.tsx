@@ -4,68 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 
-// 获取认证用户信息
-const getAuthUserFromStorage = () => {
-  if (typeof sessionStorage === 'undefined') return null;
-  try {
-    const userInfoStr = sessionStorage.getItem('commenter_user_info');
-    if (userInfoStr) {
-      return JSON.parse(userInfoStr) || null;
-    }
-  } catch (error) {
-    console.error('获取用户信息失败:', error);
-  }
-  return null;
-};
-
-// 清除认证信息
-const clearAllAuth = () => {
-  if (typeof sessionStorage !== 'undefined') {
-    try {
-      sessionStorage.removeItem('commenter_user_info');
-      sessionStorage.removeItem('commenter_active_session');
-      sessionStorage.removeItem('commenter_active_session_last_activity');
-    } catch (error) {
-      console.error('清除认证信息失败:', error);
-    }
-  }
-};
-
-// 处理登录响应
-export const handleLoginResponse = (data: any) => {
-  try {
-    if (typeof sessionStorage === 'undefined') {
-      console.error('sessionStorage不可用');
-      return false;
-    }
-    
-    if (!data || !data.success) {
-      console.error('无效的登录响应');
-      return false;
-    }
-    
-    // 只保存用户信息，token由浏览器通过HttpOnly Cookie管理
-    if (data.data?.userInfo) {
-      try {
-        sessionStorage.setItem('commenter_user_info', JSON.stringify(data.data.userInfo));
-        sessionStorage.setItem('commenter_active_session', 'true');
-        sessionStorage.setItem('commenter_active_session_last_activity', Date.now().toString());
-      } catch (error) {
-        console.warn('保存用户信息失败:', error);
-      }
-    }
-    
-    return true;
-  } catch (error) {
-    console.error('保存认证状态时发生错误:', error);
-    return false;
-  }
-};
-
-// 获取评论员首页路径
 const getCommenterHomePath = () => '/commenter/hall';
-
-
 // 定义登录表单数据类型
 interface LoginFormData {
   username: string;
@@ -195,6 +134,16 @@ export default function CommenterLoginPage() {
     }));
   }, []); // 只在组件挂载时设置一次
 
+  // 验证码60秒自动刷新
+  useEffect(() => {
+    // 设置定时器，每60秒刷新一次验证码
+    const interval = setInterval(() => {
+      refreshCaptcha();
+    }, 60000);
+    // 组件卸载时清除定时器
+    return () => clearInterval(interval);
+  }, []);
+
   // 刷新验证码
   const refreshCaptcha = () => {
     const newCaptcha = generateCaptcha();
@@ -237,6 +186,11 @@ export default function CommenterLoginPage() {
     if (!validateForm()) {
       return;
     }
+    // 验证码校验
+    if (formData.captcha.toUpperCase() !== captchaCode) {
+      setFieldErrors(prev => ({ ...prev, captcha: '验证码错误' }));
+      return;
+    }
     setIsLoading(true);
     const startTime = Date.now();
     try {
@@ -253,23 +207,43 @@ export default function CommenterLoginPage() {
         signal: AbortSignal.timeout(10000),
         credentials: 'include' // 关键设置，允许浏览器处理认证Cookie
       });
+      
+     
       const responseTime = Date.now() - startTime;
       setResponseTime(responseTime);
       const data = await response.json();
+
+      // 检查登录是否成功
+      if (response.ok && data.success) {
+        console.log('登录成功，完整响应数据:', data);
+        
+        // 确保用户信息对象存在
+        const userInfo = data.data?.userInfo || {
+          username: data.data?.username || formData.username
+        };
+        
+        console.log('准备保存的用户信息:', userInfo);
+        
+        // 保存用户信息到localStorage
+        try {
+          localStorage.setItem('commenter_user_info', JSON.stringify(userInfo));
+          console.log('用户信息已成功保存到localStorage');
+          
+          // 验证保存是否成功
+          const savedUserInfoStr = localStorage.getItem('commenter_user_info');
+          const savedUserInfo = savedUserInfoStr ? JSON.parse(savedUserInfoStr) : null;
+          console.log('从localStorage读取的用户信息:', savedUserInfo);
+        } catch (error) {
+          console.error('保存用户信息到localStorage失败:', error);
+        }
+      }
+
       if (!response.ok || !data.success) {
         throw new Error(data.message || `登录失败，状态码: ${response.status}`);
       }
-      // 登录成功
-      clearAllAuth();
-      
-    
-      const tokenResult = handleLoginResponse(data);
-      if (!tokenResult) {
-        throw new Error('处理登录响应失败');
-      }
-      
-      // 直接跳转到首页，不显示模态框
-      router.push(getCommenterHomePath());
+      setTimeout(() => {
+        router.push(getCommenterHomePath());
+      }, 300);
     } catch (error) {
       let errorMsg = '登录过程中出现错误，请稍后再试';
       const typedError = error as Error;

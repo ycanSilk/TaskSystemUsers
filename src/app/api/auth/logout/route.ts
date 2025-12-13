@@ -12,23 +12,7 @@ interface ApiResponse {
   timestamp?: number;
 }
 
-// 定义日志记录工具
-const logger = {
-  info: (message: string, data?: any) => {
-    // 在实际环境中，应使用更完善的日志系统
-    console.log(`[INFO] ${message}`, data || '');
-  },
-  error: (message: string, error?: any) => {
-    // 在实际环境中，应使用更完善的日志系统
-    console.error(`[ERROR] ${message}`, error || '');
-  },
-  debug: (message: string, data?: any) => {
-    // 仅在开发环境记录调试信息
-    if (process.env.NODE_ENV !== 'production') {
-      console.debug(`[DEBUG] ${message}`, data || '');
-    }
-  }
-};
+
 
 // 验证token格式的函数
 const validateToken = (token: string): boolean => {
@@ -65,14 +49,14 @@ const getToken = async (request: Request): Promise<{ token: string; source: stri
   
   // 1. 优先从Authorization头获取token
   const authHeader = request.headers.get('Authorization');
-  logger.debug('检查Authorization头', { authHeader });
+
   
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const tokenParts = authHeader.split(' ');
     if (tokenParts.length === 2 && tokenParts[1]) {
       token = tokenParts[1];
       source = 'header';
-      logger.debug('从Authorization头获取token');
+
     }
   }
   
@@ -86,9 +70,9 @@ const getToken = async (request: Request): Promise<{ token: string; source: stri
       
       token = CookieToken?.value || '';
       source = 'cookie';
-      logger.debug('从Cookie获取token', { hasToken: !!token });
+
     } catch (cookieError) {
-      logger.error('从Cookie获取token失败', cookieError);
+
     }
   }
   
@@ -98,7 +82,6 @@ const getToken = async (request: Request): Promise<{ token: string; source: stri
 export async function POST(request: Request) {
   // 记录请求开始
   const requestId = `req-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  logger.info(`退出登录请求开始 [${requestId}]`);
   
   try {
     // 获取并验证token
@@ -106,7 +89,7 @@ export async function POST(request: Request) {
     
     // 必须提供有效的token才能执行退出操作
     if (!token) {
-      logger.error(`[${requestId}] 退出登录失败: 缺少token`);
+
       return NextResponse.json({
         code: 401,
         message: '未提供认证信息，请先登录',
@@ -117,7 +100,7 @@ export async function POST(request: Request) {
     
     // 验证token格式是否正确
     if (!validateToken(token)) {
-      logger.error(`[${requestId}] 退出登录失败: token格式无效`, { source });
+
       return NextResponse.json({
         code: 401,
         message: '提供的认证信息无效',
@@ -126,7 +109,7 @@ export async function POST(request: Request) {
       }, { status: 401 });
     }
     
-    logger.debug(`[${requestId}] 开始处理退出登录请求`, { tokenSource: source });
+
     
     // 从配置文件中获取API配置
     const baseUrl = config.baseUrl;
@@ -136,7 +119,6 @@ export async function POST(request: Request) {
     
     // 验证配置是否完整
     if (!baseUrl || !logoutEndpoint) {
-      logger.error(`[${requestId}] 退出登录失败: API配置不完整`);
       return NextResponse.json({
         code: 500,
         message: '服务器配置错误，无法完成退出操作',
@@ -158,7 +140,7 @@ export async function POST(request: Request) {
     let responseData: any;
     
     try {
-      logger.debug(`[${requestId}] 调用外部退出API`, { apiUrl });
+
       
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -175,11 +157,7 @@ export async function POST(request: Request) {
           const errorMessage = errorData.message || errorData.error || `外部服务错误: ${response.status}`;
           const errorCode = errorData.code || response.status;
           
-          logger.error(`[${requestId}] 外部API调用失败`, { 
-            status: response.status,
-            errorMessage,
-            errorCode 
-          });
+          
           
           // 构造错误响应
           return NextResponse.json({
@@ -190,7 +168,7 @@ export async function POST(request: Request) {
           }, { status: response.status });
         } catch (parseError) {
           // 如果无法解析错误响应
-          logger.error(`[${requestId}] 无法解析外部API错误响应`, parseError);
+
           
           return NextResponse.json({
             code: response.status,
@@ -203,17 +181,17 @@ export async function POST(request: Request) {
       
       // 解析成功响应
       responseData = await response.json();
-      logger.debug(`[${requestId}] 外部API调用成功`, { responseCode: response.status });
+
       
     } catch (fetchError) {
-      logger.error(`[${requestId}] 外部API调用异常`, fetchError);
+
       
       // 即使外部API调用失败，也尝试清除本地Cookie
       try {
         await clearAuthCookies();
-        logger.debug(`[${requestId}] 外部API调用失败后，已清除本地Cookie`);
+
       } catch (clearError) {
-        logger.error(`[${requestId}] 外部API调用失败后，清除Cookie也失败`, clearError);
+
       }
       
       // 根据不同类型的异常返回不同的错误信息
@@ -254,9 +232,9 @@ export async function POST(request: Request) {
     // 清除本地Cookie中的认证信息
     try {
       await clearAuthCookies();
-      logger.debug(`[${requestId}] 成功清除本地认证Cookie`);
+
     } catch (cookieError) {
-      logger.error(`[${requestId}] 清除Cookie失败`, cookieError);
+
       // 继续处理，因为外部API调用已成功
     }
     
@@ -268,11 +246,11 @@ export async function POST(request: Request) {
       timestamp: Date.now()
     });
     
-    logger.info(`[${requestId}] 退出登录请求成功完成`);
+
     return finalResponse;
   } catch (error) {
     // 捕获所有未预见的异常
-    logger.error(`[${requestId}] 退出登录请求异常`, error);
+
     
     // 即使发生异常，也尝试清除本地Cookie
     try {
@@ -300,7 +278,7 @@ async function clearAuthCookies(): Promise<void> {
       cookieStore.delete(cookieName);
     } catch (error) {
       // 记录单个Cookie删除失败，但继续尝试其他Cookie
-      logger.error(`清除Cookie失败: ${cookieName}`, error);
+
     }
   }
 }

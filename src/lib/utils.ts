@@ -105,7 +105,7 @@ export function saveUserInfoToCookie(userInfo: User): void {
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 7); // 7天过期
     
-    let cookieStr = `commenter_user_info=${encodeURIComponent(JSON.stringify(userInfo))}; expires=${expiryDate.toUTCString()}; path=/`;
+    let cookieStr = `AcceptTask_token=${encodeURIComponent(JSON.stringify(userInfo))}; expires=${expiryDate.toUTCString()}; path=/`;
     
     if (process.env.NODE_ENV === 'production' && typeof window !== 'undefined' && window.location.protocol === 'https:') {
       cookieStr += '; secure';
@@ -124,7 +124,7 @@ export function getUserInfoFromCookie(): User | null {
   try {
     if (typeof document === 'undefined') return null;
     
-    const cookieMatch = document.cookie.match(/commenter_user_info=([^;]+)/);
+    const cookieMatch = document.cookie.match(/AcceptTask_token=([^;]+)/);
     if (cookieMatch && cookieMatch[1]) {
       return JSON.parse(decodeURIComponent(cookieMatch[1])) as User;
     }
@@ -139,7 +139,7 @@ export function removeUserInfoFromCookie(): void {
   try {
     if (typeof document === 'undefined') return;
     
-    document.cookie = 'commenter_user_info=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'AcceptTask_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   } catch (error) {
     console.error('从Cookie移除用户信息失败:', error);
   }

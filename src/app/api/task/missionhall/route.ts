@@ -181,10 +181,6 @@ export async function POST(request: Request) {
           dataContent,
           response.status >= 200 && response.status < 300
         );
-        
-        // 输出响应结果日志
-        console.log('响应状态码:', response.status, '返回数据:', standardResponse);
-        
         return NextResponse.json(standardResponse, { status: response.status });
       } catch (jsonError) {
         return NextResponse.json(

@@ -181,11 +181,6 @@ export default function ResetPasswordPage() {
         }),
         credentials: 'include' // 自动携带HttpOnly Cookie
       });
-      
-      // 响应状态
-      console.log('API响应状态码:', response.status);
-      
-      // 解析响应数据
       const data = await response.json();
       console.log('完整JSON响应:', JSON.stringify(data));
       

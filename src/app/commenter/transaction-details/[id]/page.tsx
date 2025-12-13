@@ -169,21 +169,6 @@ const TransactionDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 头部导航 */}
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
-        <div className="flex items-center px-4 py-3">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={handleBack}
-            className="h-8 w-8 mr-2"
-          >
-            <ArrowLeftOutlined className="h-5 w-5" />
-          </Button>
-          <h1 className="text-lg font-medium">余额明细详情</h1>
-        </div>
-      </div>
-
       {/* 主要内容 */}
       <div className="px-4 py-4">
         <Card className="shadow-sm border-0 rounded-xl">
